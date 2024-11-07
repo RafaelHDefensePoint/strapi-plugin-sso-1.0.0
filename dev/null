@@ -1,0 +1,1268 @@
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+
+// dist/_chunks/index-BgtKW0M4.js
+var require_index_BgtKW0M4 = __commonJS({
+  "dist/_chunks/index-BgtKW0M4.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
+    var jsxRuntime = require("react/jsx-runtime");
+    var react = require("react");
+    var reactRouterDom = require("react-router-dom");
+    var admin = require("@strapi/strapi/admin");
+    var designSystem = require("@strapi/design-system");
+    var reactIntl = require("react-intl");
+    var styled = require("styled-components");
+    var index = require_index_D2m6a_Vu();
+    var _interopDefault = (e) => e && e.__esModule ? e : { default: e };
+    var styled__default = /* @__PURE__ */ _interopDefault(styled);
+    var getTrad = (id) => `${index.pluginId}.${id}`;
+    var ButtonWrapper = styled__default.default.div`
+  margin: 10px 0 0 0;
+
+  & button {
+    margin: 0 0 0 auto;
+  }
+`;
+    var Description = styled__default.default.p`
+  font-size: 16px;
+  margin: 20px 0;
+`;
+    var AlertMessage = styled__default.default.div`
+  margin-left: -250px;
+  position: fixed;
+  left: 50%;
+  top: 2.875rem;
+  z-index: 10;
+  width: 31.25rem;
+`;
+    var HomePage = () => {
+      const { formatMessage } = reactIntl.useIntl();
+      const [ssoRoles, setSSORoles] = react.useState([]);
+      const [roles, setRoles] = react.useState([]);
+      const [showSuccess, setSuccess] = react.useState(false);
+      const [showError, setError] = react.useState(false);
+      const { get, put } = admin.useFetchClient();
+      react.useEffect(() => {
+        const init = async () => {
+          const ssoRoleResponse = await get(`/strapi-plugin-sso/sso-roles`);
+          setSSORoles(ssoRoleResponse.data);
+          const roleResponse = await get(`/admin/roles`);
+          setRoles(roleResponse.data.data);
+        };
+        init();
+      }, [setSSORoles, setRoles]);
+      const onChangeCheck = (value, ssoId, role) => {
+        for (const ssoRole of ssoRoles) {
+          if (ssoRole["oauth_type"] === ssoId) {
+            if (ssoRole["role"]) {
+              if (value) {
+                ssoRole["role"].push(role);
+              } else {
+                ssoRole["role"] = ssoRole["role"].filter((selectRole) => selectRole !== role);
+              }
+            } else {
+              ssoRole["role"] = [role];
+            }
+          }
+        }
+        setSSORoles(ssoRoles.slice());
+      };
+      const onClickSave = async () => {
+        try {
+          await put("/strapi-plugin-sso/sso-roles", {
+            roles: ssoRoles.map((role) => ({
+              "oauth_type": role["oauth_type"],
+              role: role["role"]
+            }))
+          });
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 3e3);
+        } catch (e) {
+          console.error(e);
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 3e3);
+        }
+      };
+      return /* @__PURE__ */ jsxRuntime.jsxs(admin.Page.Protect, { permissions: [{ action: "plugin::strapi-plugin-sso.read", subject: null }], children: [
+        /* @__PURE__ */ jsxRuntime.jsx(
+          admin.Layouts.Header,
+          {
+            title: "Single Sign On",
+            subtitle: formatMessage({
+              id: getTrad("page.title"),
+              defaultMessage: "Default role setting at first login"
+            })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Box, { padding: 10, children: [
+          showSuccess && /* @__PURE__ */ jsxRuntime.jsx(AlertMessage, { children: /* @__PURE__ */ jsxRuntime.jsx(
+            designSystem.Alert,
+            {
+              title: "Success",
+              variant: "success",
+              closeLabel: "",
+              onClose: () => setSuccess(false),
+              children: formatMessage({
+                id: getTrad("page.save.success"),
+                defaultMessage: "Updated settings"
+              })
+            }
+          ) }),
+          showError && /* @__PURE__ */ jsxRuntime.jsx(AlertMessage, { children: /* @__PURE__ */ jsxRuntime.jsx(
+            designSystem.Alert,
+            {
+              title: "Error",
+              variant: "danger",
+              closeLabel: "",
+              onClose: () => setError(false),
+              children: formatMessage({
+                id: getTrad("page.save.error"),
+                defaultMessage: "Update failed."
+              })
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Table, { colCount: roles.length + 1, rowCount: ssoRoles.length, children: [
+            /* @__PURE__ */ jsxRuntime.jsx(designSystem.Thead, { children: /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Tr, { children: [
+              /* @__PURE__ */ jsxRuntime.jsx(designSystem.Th, { children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Checkbox, { style: { display: "none" } }) }),
+              roles.map((role) => /* @__PURE__ */ jsxRuntime.jsx(designSystem.Th, { children: role["name"] }, role["id"]))
+            ] }) }),
+            /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tbody, { children: ssoRoles.map((ssoRole) => /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Tr, { children: [
+              /* @__PURE__ */ jsxRuntime.jsx(designSystem.Td, { children: ssoRole["name"] }),
+              roles.map((role) => /* @__PURE__ */ jsxRuntime.jsx(designSystem.Th, { children: /* @__PURE__ */ jsxRuntime.jsx(
+                designSystem.Checkbox,
+                {
+                  checked: ssoRole["role"] && ssoRole["role"].includes(role["id"]),
+                  onCheckedChange: (value) => {
+                    onChangeCheck(value, ssoRole["oauth_type"], role["id"]);
+                  },
+                  children: ""
+                }
+              ) }, role["id"]))
+            ] }, ssoRole["oauth_type"])) })
+          ] }),
+          /* @__PURE__ */ jsxRuntime.jsx(Description, { children: formatMessage({
+            id: getTrad("page.notes"),
+            defaultMessage: "This will not be reflected for already registered users."
+          }) }),
+          /* @__PURE__ */ jsxRuntime.jsx(ButtonWrapper, { children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Button, { variant: "default", onClick: onClickSave, children: formatMessage({
+            id: getTrad("page.save"),
+            defaultMessage: "Save"
+          }) }) })
+        ] })
+      ] });
+    };
+    var HomePage$1 = react.memo(HomePage);
+    var App = () => {
+      return /* @__PURE__ */ jsxRuntime.jsx("div", { children: /* @__PURE__ */ jsxRuntime.jsxs(reactRouterDom.Routes, { children: [
+        /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Route, { index: true, element: /* @__PURE__ */ jsxRuntime.jsx(HomePage$1, {}) }),
+        /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Route, { path: "*", element: /* @__PURE__ */ jsxRuntime.jsx(admin.Page.Error, {}) })
+      ] }) });
+    };
+    exports2.default = App;
+  }
+});
+
+// dist/_chunks/en-DtcBvSHe.js
+var require_en_DtcBvSHe = __commonJS({
+  "dist/_chunks/en-DtcBvSHe.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
+    var en = {
+      "page.title": "Default role setting at first login",
+      "page.notes": "This will not be reflected for already registered users.",
+      "page.save": "Save",
+      "page.save.success": "Updated settings",
+      "page.save.error": "Update failed."
+    };
+    exports2.default = en;
+  }
+});
+
+// dist/_chunks/fr-C8Qw4iPZ.js
+var require_fr_C8Qw4iPZ = __commonJS({
+  "dist/_chunks/fr-C8Qw4iPZ.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
+    var fr = {};
+    exports2.default = fr;
+  }
+});
+
+// dist/_chunks/ja-DDlwRju9.js
+var require_ja_DDlwRju9 = __commonJS({
+  "dist/_chunks/ja-DDlwRju9.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
+    var ja = {
+      "page.title": "\u521D\u56DE\u30ED\u30B0\u30A4\u30F3\u6642\u306E\u30C7\u30D5\u30A9\u30EB\u30C8\u30ED\u30FC\u30EB\u8A2D\u5B9A",
+      "page.notes": "\u65E2\u306B\u767B\u9332\u6E08\u307F\u306E\u30E6\u30FC\u30B6\u30FC\u306B\u306F\u53CD\u6620\u3055\u308C\u307E\u305B\u3093",
+      "page.save": "\u4FDD\u5B58",
+      "page.save.success": "\u8A2D\u5B9A\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F",
+      "page.save.error": "\u8A2D\u5B9A\u306E\u66F4\u65B0\u306B\u5931\u6557\u3057\u307E\u3057\u305F"
+    };
+    exports2.default = ja;
+  }
+});
+
+// dist/_chunks/index-D2m6a-Vu.js
+var require_index_D2m6a_Vu = __commonJS({
+  "dist/_chunks/index-D2m6a-Vu.js"(exports2) {
+    "use strict";
+    var react = require("react");
+    var jsxRuntime = require("react/jsx-runtime");
+    var icons = require("@strapi/icons");
+    var __variableDynamicImportRuntimeHelper = (glob, path) => {
+      const v = glob[path];
+      if (v) {
+        return typeof v === "function" ? v() : Promise.resolve(v);
+      }
+      return new Promise((_, reject) => {
+        (typeof queueMicrotask === "function" ? queueMicrotask : setTimeout)(reject.bind(null, new Error("Unknown variable dynamic import: " + path)));
+      });
+    };
+    var name$1 = "strapi-plugin-sso";
+    var version = "1.0.0";
+    var description = "Plug-in for single sign-on with Strapi!";
+    var strapi2 = {
+      displayName: "Single Sign On",
+      name: "strapi-plugin-sso",
+      description: "Version 5 enables single sign-on",
+      kind: "plugin"
+    };
+    var scripts = {
+      build: "strapi-plugin build",
+      watch: "strapi-plugin watch",
+      "watch:link": "strapi-plugin watch:link",
+      verify: "strapi-plugin verify",
+      test: "jest",
+      lint: "eslint"
+    };
+    var keywords = [
+      "strapi",
+      "plugin",
+      "oauth",
+      "SSO",
+      "Google",
+      "Cognito"
+    ];
+    var peerDependencies = {
+      "@strapi/strapi": "^5.0.0"
+    };
+    var dependencies = {
+      "@strapi/design-system": "^2.0.0-rc.11",
+      "@strapi/icons": "^2.0.0-rc.11",
+      "@strapi/utils": "^5.0.0",
+      axios: "^1.7.5",
+      "generate-password": "^1.7.1",
+      "pkce-challenge": "^3.1.0",
+      react: "^18.0.0",
+      "react-dom": "^18.0.0",
+      "react-intl": "^6.0.0",
+      "react-router-dom": "^6.0.0",
+      "styled-components": "^6.0.0"
+    };
+    var author = {
+      name: "yasudacloud",
+      url: "https://github.com/yasudacloud/strapi-plugin-sso"
+    };
+    var repository = {
+      type: "git",
+      url: "https://github.com/yasudacloud/strapi-plugin-sso"
+    };
+    var bugs = {
+      url: "https://github.com/yasudacloud/strapi-plugin-sso/issues"
+    };
+    var maintainers = [
+      {
+        name: "yasudacloud"
+      }
+    ];
+    var engines = {
+      node: ">=18.0.0 <21.0.0",
+      npm: ">=8.6.0"
+    };
+    var files = [
+      "dist"
+    ];
+    var license = "MIT";
+    var devDependencies = {
+      "@strapi/sdk-plugin": "^5.2.0",
+      eslint: "^9.0.0",
+      globals: "^15.9.0",
+      jest: "^29.3.1"
+    };
+    var jest = {
+      testPathIgnorePatterns: [
+        "/node_modules/",
+        ".tmp",
+        "dist",
+        ".cache"
+      ],
+      testEnvironment: "node"
+    };
+    var exports$1 = {
+      "./package.json": "./package.json",
+      "./strapi-admin": {
+        source: "./admin/src/index.js",
+        "import": "./dist/admin/index.mjs",
+        require: "./dist/admin/index.js",
+        "default": "./dist/admin/index.js"
+      },
+      "./strapi-server": {
+        source: "./server/index.js",
+        "import": "./dist/server/index.mjs",
+        require: "./dist/server/index.js",
+        "default": "./dist/server/index.js"
+      }
+    };
+    var pluginPkg = {
+      name: name$1,
+      version,
+      description,
+      strapi: strapi2,
+      scripts,
+      keywords,
+      peerDependencies,
+      dependencies,
+      author,
+      repository,
+      bugs,
+      maintainers,
+      engines,
+      files,
+      license,
+      devDependencies,
+      jest,
+      exports: exports$1
+    };
+    var pluginId = pluginPkg.name.replace(/^@strapi\/plugin-/i, "");
+    var getTranslation = (id) => `${pluginId}.${id}`;
+    var Initializer = ({ setPlugin }) => {
+      const ref = react.useRef();
+      ref.current = setPlugin;
+      react.useEffect(() => {
+        ref.current(pluginId);
+      }, []);
+      return null;
+    };
+    var PluginIcon = () => /* @__PURE__ */ jsxRuntime.jsx(icons.Lock, {});
+    var name = pluginPkg.strapi.displayName;
+    var index = {
+      register(app) {
+        app.addMenuLink({
+          to: `/plugins/${pluginId}`,
+          icon: PluginIcon,
+          intlLabel: {
+            id: `${pluginId}.plugin.name`,
+            defaultMessage: name
+          },
+          Component: async () => {
+            return await Promise.resolve().then(() => require_index_BgtKW0M4());
+          },
+          permissions: [{ action: "plugin::strapi-plugin-sso.read", subject: null }]
+        });
+        app.registerPlugin({
+          id: pluginId,
+          initializer: Initializer,
+          isReady: false,
+          name
+        });
+      },
+      bootstrap(app) {
+      },
+      async registerTrads({ locales }) {
+        const importedTrads = await Promise.all(
+          locales.map((locale) => {
+            return __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/en.json": () => Promise.resolve().then(() => require_en_DtcBvSHe()), "./translations/fr.json": () => Promise.resolve().then(() => require_fr_C8Qw4iPZ()), "./translations/ja.json": () => Promise.resolve().then(() => require_ja_DDlwRju9()) }), `./translations/${locale}.json`).then(({ default: data }) => {
+              const newData = Object.fromEntries(
+                Object.entries(data).map(([key, value]) => [getTranslation(key), value])
+              );
+              return {
+                data: newData,
+                locale
+              };
+            }).catch(() => {
+              return {
+                data: {},
+                locale
+              };
+            });
+          })
+        );
+        return Promise.resolve(importedTrads);
+      }
+    };
+    exports2.index = index;
+    exports2.pluginId = pluginId;
+  }
+});
+
+// dist/admin/index.js
+var require_admin = __commonJS({
+  "dist/admin/index.js"(exports2, module2) {
+    "use strict";
+    var index = require_index_D2m6a_Vu();
+    module2.exports = index.index;
+  }
+});
+
+// dist/server/index.js
+var require_server = __commonJS({
+  "dist/server/index.js"(exports2, module2) {
+    "use strict";
+    var axios = require("axios");
+    var crypto = require("crypto");
+    var pkceChallenge = require("pkce-challenge");
+    var strapiUtils = require("@strapi/utils");
+    var generator = require("generate-password");
+    var _interopDefault = (e) => e && e.__esModule ? e : { default: e };
+    var axios__default = /* @__PURE__ */ _interopDefault(axios);
+    var pkceChallenge__default = /* @__PURE__ */ _interopDefault(pkceChallenge);
+    var strapiUtils__default = /* @__PURE__ */ _interopDefault(strapiUtils);
+    var generator__default = /* @__PURE__ */ _interopDefault(generator);
+    var register = ({ strapi: strapi2 }) => {
+    };
+    var bootstrap = async ({ strapi: strapi2 }) => {
+      const actions = [
+        {
+          section: "plugins",
+          displayName: "Read",
+          uid: "read",
+          pluginName: "strapi-plugin-sso"
+        }
+      ];
+      await strapi2.admin.services.permission.actionProvider.registerMany(actions);
+    };
+    var destroy = ({ strapi: strapi2 }) => {
+    };
+    var config = {
+      default: {
+        REMEMBER_ME: false,
+        GOOGLE_OAUTH_REDIRECT_URI: "http://localhost:1337/strapi-plugin-sso/google/callback",
+        GOOGLE_GSUITE_HD: "",
+        GOOGLE_ALIAS: "",
+        COGNITO_OAUTH_REDIRECT_URI: "http://localhost:1337/strapi-plugin-sso/cognito/callback",
+        COGNITO_OAUTH_REGION: "ap-northeast-1",
+        AZUREAD_OAUTH_REDIRECT_URI: "http://localhost:1337/strapi-plugin-sso/azuread/callback",
+        AZUREAD_TENANT_ID: "",
+        AZUREAD_OAUTH_CLIENT_ID: "",
+        AZUREAD_OAUTH_CLIENT_SECRET: "",
+        AZUREAD_SCOPE: "user.read",
+        OIDC_REDIRECT_URI: "http://localhost:1337/strapi-plugin-sso/oidc/callback",
+        OIDC_CLIENT_ID: "",
+        OIDC_CLIENT_SECRET: "",
+        OIDC_SCOPES: "openid profile email",
+        OIDC_AUTHORIZATION_ENDPOINT: "",
+        OIDC_TOKEN_ENDPOINT: "",
+        OIDC_USER_INFO_ENDPOINT: "",
+        OIDC_USER_INFO_ENDPOINT_WITH_AUTH_HEADER: false,
+        OIDC_GRANT_TYPE: "authorization_code",
+        OIDC_FAMILY_NAME_FIELD: "family_name",
+        OIDC_GIVEN_NAME_FIELD: "given_name"
+      },
+      validator() {
+      }
+    };
+    var info = {
+      singularName: "roles",
+      pluralName: "sso-roles",
+      collectionName: "sso-roles",
+      displayName: "sso-role",
+      description: ""
+    };
+    var options = {
+      draftAndPublish: false
+    };
+    var pluginOptions = {
+      "content-manager": {
+        visible: false
+      },
+      "content-type-builder": {
+        visible: false
+      }
+    };
+    var attributes = {
+      oauth_type: {
+        type: "string",
+        configurable: false,
+        required: true
+      },
+      roles: {
+        type: "json",
+        configurable: false
+      }
+    };
+    var schema = {
+      info,
+      options,
+      pluginOptions,
+      attributes
+    };
+    var roles = {
+      schema
+    };
+    var contentTypes = {
+      roles
+    };
+    var configValidation$3 = () => {
+      const config2 = strapi.config.get("plugin::strapi-plugin-sso");
+      if (config2["GOOGLE_OAUTH_CLIENT_ID"] && config2["GOOGLE_OAUTH_CLIENT_SECRET"]) {
+        return config2;
+      }
+      throw new Error("GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are required");
+    };
+    var OAUTH_ENDPOINT$2 = "https://accounts.google.com/o/oauth2/auth";
+    var OAUTH_TOKEN_ENDPOINT$2 = "https://accounts.google.com/o/oauth2/token";
+    var OAUTH_USER_INFO_ENDPOINT$2 = "https://www.googleapis.com/oauth2/v1/userinfo";
+    var OAUTH_GRANT_TYPE$2 = "authorization_code";
+    var OAUTH_RESPONSE_TYPE$2 = "code";
+    var OAUTH_SCOPE$1 = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+    async function googleSignIn(ctx) {
+      const config2 = configValidation$3();
+      const redirectUri = encodeURIComponent(config2["GOOGLE_OAUTH_REDIRECT_URI"]);
+      const url = `${OAUTH_ENDPOINT$2}?client_id=${config2["GOOGLE_OAUTH_CLIENT_ID"]}&redirect_uri=${redirectUri}&scope=${OAUTH_SCOPE$1}&response_type=${OAUTH_RESPONSE_TYPE$2}`;
+      ctx.set("Location", url);
+      return ctx.send({}, 302);
+    }
+    async function googleSignInCallback(ctx) {
+      const config2 = configValidation$3();
+      const httpClient = axios__default.default.create();
+      const userService = strapi.service("admin::user");
+      const tokenService = strapi.service("admin::token");
+      const oauthService = strapi.plugin("strapi-plugin-sso").service("oauth");
+      const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+      if (!ctx.query.code) {
+        return ctx.send(oauthService.renderSignUpError(`code Not Found`));
+      }
+      const params = new URLSearchParams();
+      params.append("code", ctx.query.code);
+      params.append("client_id", config2["GOOGLE_OAUTH_CLIENT_ID"]);
+      params.append("client_secret", config2["GOOGLE_OAUTH_CLIENT_SECRET"]);
+      params.append("redirect_uri", config2["GOOGLE_OAUTH_REDIRECT_URI"]);
+      params.append("grant_type", OAUTH_GRANT_TYPE$2);
+      try {
+        const response = await httpClient.post(OAUTH_TOKEN_ENDPOINT$2, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+        const userInfoEndpoint = `${OAUTH_USER_INFO_ENDPOINT$2}?access_token=${response.data.access_token}`;
+        const userResponse = await httpClient.get(userInfoEndpoint);
+        if (config2["GOOGLE_GSUITE_HD"]) {
+          if (userResponse.data.hd !== config2["GOOGLE_GSUITE_HD"]) {
+            throw new Error("Unauthorized email address");
+          }
+        }
+        const email = config2["GOOGLE_ALIAS"] ? oauthService.addGmailAlias(userResponse.data.email, config2["GOOGLE_ALIAS"]) : userResponse.data.email;
+        const dbUser = await userService.findOneByEmail(email);
+        let activateUser;
+        let jwtToken;
+        if (dbUser) {
+          activateUser = dbUser;
+          jwtToken = await tokenService.createJwtToken(dbUser);
+        } else {
+          const googleRoles = await roleService.googleRoles();
+          const roles2 = googleRoles && googleRoles["roles"] ? googleRoles["roles"].map((role2) => ({
+            id: role2
+          })) : [];
+          const defaultLocale = oauthService.localeFindByHeader(ctx.request.headers);
+          activateUser = await oauthService.createUser(
+            email,
+            userResponse.data.family_name,
+            userResponse.data.given_name,
+            defaultLocale,
+            roles2
+          );
+          jwtToken = await tokenService.createJwtToken(activateUser);
+          await oauthService.triggerWebHook(activateUser);
+        }
+        oauthService.triggerSignInSuccess(activateUser);
+        const nonce = crypto.randomUUID();
+        const html = oauthService.renderSignUpSuccess(jwtToken, activateUser, nonce);
+        ctx.set("Content-Security-Policy", `script-src 'nonce-${nonce}'`);
+        ctx.send(html);
+      } catch (e) {
+        console.error(e);
+        ctx.send(oauthService.renderSignUpError(e.message));
+      }
+    }
+    var google = {
+      googleSignIn,
+      googleSignInCallback
+    };
+    var configValidation$2 = () => {
+      const config2 = strapi.config.get("plugin::strapi-plugin-sso");
+      if (config2["COGNITO_OAUTH_CLIENT_ID"] && config2["COGNITO_OAUTH_CLIENT_SECRET"] && config2["COGNITO_OAUTH_DOMAIN"]) {
+        return config2;
+      }
+      throw new Error("COGNITO_OAUTH_CLIENT_ID, COGNITO_OAUTH_CLIENT_SECRET AND COGNITO_OAUTH_DOMAIN are required");
+    };
+    var OAUTH_ENDPOINT$1 = (domain, region) => {
+      return `https://${domain}.auth.${region}.amazoncognito.com/oauth2/authorize`;
+    };
+    var OAUTH_TOKEN_ENDPOINT$1 = (domain, region) => {
+      return `https://${domain}.auth.${region}.amazoncognito.com/oauth2/token`;
+    };
+    var OAUTH_USER_INFO_ENDPOINT$1 = (domain, region) => {
+      return `https://${domain}.auth.${region}.amazoncognito.com/oauth2/userInfo`;
+    };
+    var OAUTH_GRANT_TYPE$1 = "authorization_code";
+    var OAUTH_SCOPE = encodeURIComponent("openid email profile");
+    var OAUTH_RESPONSE_TYPE$1 = "code";
+    async function cognitoSignIn(ctx) {
+      const config2 = configValidation$2();
+      const redirectUri = encodeURIComponent(config2["COGNITO_OAUTH_REDIRECT_URI"]);
+      const endpoint = OAUTH_ENDPOINT$1(config2["COGNITO_OAUTH_DOMAIN"], config2["COGNITO_OAUTH_REGION"]);
+      const url = `${endpoint}?client_id=${config2["COGNITO_OAUTH_CLIENT_ID"]}&redirect_uri=${redirectUri}&scope=${OAUTH_SCOPE}&response_type=${OAUTH_RESPONSE_TYPE$1}`;
+      ctx.set("Location", url);
+      return ctx.send({}, 302);
+    }
+    async function cognitoSignInCallback(ctx) {
+      const config2 = configValidation$2();
+      const userService = strapi.service("admin::user");
+      const tokenService = strapi.service("admin::token");
+      const oauthService = strapi.plugin("strapi-plugin-sso").service("oauth");
+      const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+      if (!ctx.query.code) {
+        return ctx.send(oauthService.renderSignUpError(`code Not Found`));
+      }
+      const params = new URLSearchParams();
+      params.append("code", ctx.query.code);
+      params.append("client_id", config2["COGNITO_OAUTH_CLIENT_ID"]);
+      params.append("client_secret", config2["COGNITO_OAUTH_CLIENT_SECRET"]);
+      params.append("redirect_uri", config2["COGNITO_OAUTH_REDIRECT_URI"]);
+      params.append("grant_type", OAUTH_GRANT_TYPE$1);
+      try {
+        const tokenEndpoint = OAUTH_TOKEN_ENDPOINT$1(config2["COGNITO_OAUTH_DOMAIN"], config2["COGNITO_OAUTH_REGION"]);
+        const userInfoEndpoint = OAUTH_USER_INFO_ENDPOINT$1(config2["COGNITO_OAUTH_DOMAIN"], config2["COGNITO_OAUTH_REGION"]);
+        const response = await axios__default.default.post(tokenEndpoint, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+        const userResponse = await axios__default.default.get(userInfoEndpoint, {
+          headers: {
+            Authorization: `Bearer ${response.data.access_token}`
+          }
+        });
+        if (userResponse.data.email_verified !== "true") {
+          throw new Error("Your email address has not been verified.");
+        }
+        const dbUser = await userService.findOneByEmail(userResponse.data.email);
+        let activateUser;
+        let jwtToken;
+        if (dbUser) {
+          activateUser = dbUser;
+          jwtToken = await tokenService.createJwtToken(dbUser);
+        } else {
+          const cognitoRoles = await roleService.googleRoles();
+          const roles2 = cognitoRoles && cognitoRoles["roles"] ? cognitoRoles["roles"].map((role2) => ({
+            id: role2
+          })) : [];
+          const defaultLocale = oauthService.localeFindByHeader(ctx.request.headers);
+          activateUser = await oauthService.createUser(
+            userResponse.data.email,
+            "",
+            userResponse.data.username,
+            defaultLocale,
+            roles2
+          );
+          jwtToken = await tokenService.createJwtToken(activateUser);
+          await oauthService.triggerWebHook(activateUser);
+        }
+        oauthService.triggerSignInSuccess(activateUser);
+        const nonce = crypto.randomUUID();
+        const html = oauthService.renderSignUpSuccess(jwtToken, activateUser, nonce);
+        ctx.set("Content-Security-Policy", `script-src 'nonce-${nonce}'`);
+        ctx.send(html);
+      } catch (e) {
+        console.error(e);
+        ctx.send(oauthService.renderSignUpError(e.message));
+      }
+    }
+    var cognito = {
+      cognitoSignIn,
+      cognitoSignInCallback
+    };
+    var configValidation$1 = () => {
+      const config2 = strapi.config.get("plugin::strapi-plugin-sso");
+      if (config2["AZUREAD_OAUTH_CLIENT_ID"] && config2["AZUREAD_OAUTH_CLIENT_SECRET"] && config2["AZUREAD_TENANT_ID"]) {
+        return config2;
+      }
+      throw new Error(
+        "AZUREAD_OAUTH_CLIENT_ID, AZUREAD_OAUTH_CLIENT_SECRET, and AZUREAD_TENANT_ID are required"
+      );
+    };
+    var OAUTH_ENDPOINT = (tenantId) => `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize`;
+    var OAUTH_TOKEN_ENDPOINT = (tenantId) => `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
+    var OAUTH_USER_INFO_ENDPOINT = "https://graph.microsoft.com/oidc/userinfo";
+    var OAUTH_GRANT_TYPE = "authorization_code";
+    var OAUTH_RESPONSE_TYPE = "code";
+    async function azureAdSignIn(ctx) {
+      const config2 = configValidation$1();
+      const redirectUri = encodeURIComponent(config2["AZUREAD_OAUTH_REDIRECT_URI"]);
+      const endpoint = OAUTH_ENDPOINT(config2["AZUREAD_TENANT_ID"]);
+      const { code_verifier: codeVerifier, code_challenge: codeChallenge } = pkceChallenge__default.default();
+      ctx.session.codeVerifier = codeVerifier;
+      const url = `${endpoint}?client_id=${config2["AZUREAD_OAUTH_CLIENT_ID"]}&redirect_uri=${redirectUri}&scope=${config2["AZUREAD_SCOPE"]}&response_type=${OAUTH_RESPONSE_TYPE}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+      ctx.set("Location", url);
+      return ctx.send({}, 302);
+    }
+    async function azureAdSignInCallback(ctx) {
+      const config2 = configValidation$1();
+      const userService = strapi.service("admin::user");
+      const tokenService = strapi.service("admin::token");
+      const oauthService = strapi.plugin("strapi-plugin-sso").service("oauth");
+      const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+      if (!ctx.query.code) {
+        return ctx.send(oauthService.renderSignUpError(`code Not Found`));
+      }
+      const params = new URLSearchParams();
+      params.append("code", ctx.query.code);
+      params.append("client_id", config2["AZUREAD_OAUTH_CLIENT_ID"]);
+      params.append("client_secret", config2["AZUREAD_OAUTH_CLIENT_SECRET"]);
+      params.append("redirect_uri", config2["AZUREAD_OAUTH_REDIRECT_URI"]);
+      params.append("grant_type", OAUTH_GRANT_TYPE);
+      params.append("code_verifier", ctx.session.codeVerifier);
+      try {
+        const tokenEndpoint = OAUTH_TOKEN_ENDPOINT(config2["AZUREAD_TENANT_ID"]);
+        const response = await axios__default.default.post(tokenEndpoint, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+        const userResponse = await axios__default.default.get(OAUTH_USER_INFO_ENDPOINT, {
+          headers: {
+            Authorization: `Bearer ${response.data.access_token}`
+          }
+        });
+        const dbUser = await userService.findOneByEmail(userResponse.data.email);
+        let activateUser;
+        let jwtToken;
+        if (dbUser) {
+          activateUser = dbUser;
+          jwtToken = await tokenService.createJwtToken(dbUser);
+        } else {
+          const azureAdRoles = await roleService.azureAdRoles();
+          const roles2 = azureAdRoles && azureAdRoles["roles"] ? azureAdRoles["roles"].map((role2) => ({
+            id: role2
+          })) : [];
+          const defaultLocale = oauthService.localeFindByHeader(
+            ctx.request.headers
+          );
+          activateUser = await oauthService.createUser(
+            userResponse.data.email,
+            userResponse.data.family_name,
+            userResponse.data.given_name,
+            defaultLocale,
+            roles2
+          );
+          jwtToken = await tokenService.createJwtToken(activateUser);
+          await oauthService.triggerWebHook(activateUser);
+        }
+        oauthService.triggerSignInSuccess(activateUser);
+        const nonce = crypto.randomUUID();
+        const html = oauthService.renderSignUpSuccess(
+          jwtToken,
+          activateUser,
+          nonce
+        );
+        ctx.set("Content-Security-Policy", `script-src 'nonce-${nonce}'`);
+        ctx.send(html);
+      } catch (e) {
+        console.error(e.response.data);
+        ctx.send(oauthService.renderSignUpError(e.message));
+      }
+    }
+    var azuread = {
+      azureAdSignIn,
+      azureAdSignInCallback
+    };
+    var configValidation = () => {
+      const config2 = strapi.config.get("plugin::strapi-plugin-sso");
+      if (config2["OIDC_CLIENT_ID"] && config2["OIDC_CLIENT_SECRET"] && config2["OIDC_REDIRECT_URI"] && config2["OIDC_SCOPES"] && config2["OIDC_TOKEN_ENDPOINT"] && config2["OIDC_USER_INFO_ENDPOINT"] && config2["OIDC_GRANT_TYPE"] && config2["OIDC_FAMILY_NAME_FIELD"] && config2["OIDC_GIVEN_NAME_FIELD"] && config2["OIDC_AUTHORIZATION_ENDPOINT"]) {
+        return config2;
+      }
+      throw new Error("OIDC_AUTHORIZATION_ENDPOINT,OIDC_TOKEN_ENDPOINT, OIDC_USER_INFO_ENDPOINT,OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_REDIRECT_URI, and OIDC_SCOPES are required");
+    };
+    var oidcSignIn = async (ctx) => {
+      const { state } = ctx.query;
+      const { OIDC_CLIENT_ID, OIDC_REDIRECT_URI, OIDC_SCOPES, OIDC_AUTHORIZATION_ENDPOINT } = configValidation();
+      const authorizationUrl = `${OIDC_AUTHORIZATION_ENDPOINT}?response_type=code&client_id=${OIDC_CLIENT_ID}&redirect_uri=${OIDC_REDIRECT_URI}&scope=${OIDC_SCOPES}&state=${state}`;
+      ctx.redirect(authorizationUrl);
+    };
+    var oidcSignInCallback = async (ctx) => {
+      const config2 = configValidation();
+      const httpClient = axios__default.default.create();
+      const userService = strapi.service("admin::user");
+      const tokenService = strapi.service("admin::token");
+      const oauthService = strapi.plugin("strapi-plugin-sso").service("oauth");
+      const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+      if (!ctx.query.code) {
+        return ctx.send(oauthService.renderSignUpError(`code Not Found`));
+      }
+      const params = new URLSearchParams();
+      params.append("code", ctx.query.code);
+      params.append("client_id", config2["OIDC_CLIENT_ID"]);
+      params.append("client_secret", config2["OIDC_CLIENT_SECRET"]);
+      params.append("redirect_uri", config2["OIDC_REDIRECT_URI"]);
+      params.append("grant_type", config2["OIDC_GRANT_TYPE"]);
+      try {
+        let verifyToken = function(token) {
+          if (!token) {
+            console.error("No token provided");
+            return null;
+          }
+          const payloadBase64 = token.split(".")[1];
+          const decodedPayload = JSON.parse(atob(payloadBase64));
+          const clientName = config2["OIDC_CLIENT_ID_FOR_ROLE"];
+          const roleToCheck = config2["OIDC_CLIENT_ROLE_CHECK"];
+          const rolesInPayload = decodedPayload.resource_access?.[clientName]?.roles;
+          if (rolesInPayload && rolesInPayload.includes(roleToCheck)) {
+            console.log("User has the required role");
+            return decodedPayload;
+          } else {
+            console.error("User does not have the required role");
+            return null;
+          }
+        };
+        const response = await httpClient.post(config2["OIDC_TOKEN_ENDPOINT"], params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+        let userInfoEndpointHeaders = {};
+        let userInfoEndpointParameters = `?access_token=${response.data.access_token}`;
+        if (config2["OIDC_USER_INFO_ENDPOINT_WITH_AUTH_HEADER"]) {
+          userInfoEndpointHeaders = {
+            headers: { Authorization: `Bearer ${response.data.access_token}` }
+          };
+          userInfoEndpointParameters = "";
+        }
+        const userInfoEndpoint = `${config2["OIDC_USER_INFO_ENDPOINT"]}${userInfoEndpointParameters}`;
+        const userResponse = await httpClient.get(
+          userInfoEndpoint,
+          userInfoEndpointHeaders
+        );
+        const email = userResponse.data.email;
+        const dbUser = await userService.findOneByEmail(email);
+        let activateUser;
+        let jwtToken;
+        if (dbUser) {
+          activateUser = dbUser;
+          jwtToken = await tokenService.createJwtToken(dbUser);
+        }
+        if (!dbUser) {
+          const decodedPayload = verifyToken(response.data.access_token);
+          if (!decodedPayload) {
+            return ctx.send(oauthService.renderSignUpError(`Any Permission Found`));
+          }
+          const oidcRoles = await roleService.oidcRoles();
+          const roles2 = oidcRoles && oidcRoles["roles"] ? oidcRoles["roles"].map((role2) => ({
+            id: role2
+          })) : [];
+          const defaultLocale = oauthService.localeFindByHeader(ctx.request.headers);
+          activateUser = await oauthService.createUser(
+            email,
+            userResponse.data[config2["OIDC_FAMILY_NAME_FIELD"]],
+            userResponse.data[config2["OIDC_GIVEN_NAME_FIELD"]],
+            defaultLocale,
+            roles2
+          );
+          jwtToken = await tokenService.createJwtToken(activateUser);
+          await oauthService.triggerWebHook(activateUser);
+        }
+        oauthService.triggerSignInSuccess(activateUser);
+        const nonce = crypto.randomUUID();
+        const html = oauthService.renderSignUpSuccess(jwtToken, activateUser, nonce);
+        ctx.set("Content-Security-Policy", `script-src 'nonce-${nonce}'`);
+        ctx.send(html);
+      } catch (e) {
+        console.error(e);
+        ctx.send(oauthService.renderSignUpError(e.message));
+      }
+    };
+    var oidc = {
+      oidcSignIn,
+      oidcSignInCallback
+    };
+    async function find(ctx) {
+      const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+      const roles2 = await roleService.find();
+      const ssoConstants = roleService.ssoRoles();
+      for (const sso of ssoConstants) {
+        for (const role2 of roles2) {
+          if (role2["oauth_type"] === sso["oauth_type"]) {
+            sso["role"] = role2["roles"];
+          }
+        }
+      }
+      ctx.send(ssoConstants);
+    }
+    async function update(ctx) {
+      try {
+        const { roles: roles2 } = ctx.request.body;
+        const roleService = strapi.plugin("strapi-plugin-sso").service("role");
+        await roleService.update(roles2);
+        ctx.send({}, 204);
+      } catch (e) {
+        console.log(e);
+        ctx.send({}, 400);
+      }
+    }
+    var role$1 = {
+      find,
+      update
+    };
+    var controllers = {
+      google,
+      cognito,
+      azuread,
+      oidc,
+      role: role$1
+    };
+    var routes = [
+      {
+        method: "GET",
+        path: "/google",
+        handler: "google.googleSignIn",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/google/callback",
+        handler: "google.googleSignInCallback",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/cognito",
+        handler: "cognito.cognitoSignIn",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/cognito/callback",
+        handler: "cognito.cognitoSignInCallback",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/azuread",
+        handler: "azuread.azureAdSignIn",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/azuread/callback",
+        handler: "azuread.azureAdSignInCallback",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/sso-roles",
+        handler: "role.find"
+      },
+      {
+        method: "PUT",
+        path: "/sso-roles",
+        handler: "role.update"
+      },
+      {
+        method: "GET",
+        path: "/oidc",
+        handler: "oidc.oidcSignIn",
+        config: {
+          auth: false
+        }
+      },
+      {
+        method: "GET",
+        path: "/oidc/callback",
+        handler: "oidc.oidcSignInCallback",
+        config: {
+          auth: false
+        }
+      }
+    ];
+    var policies = {};
+    var oauth = ({ strapi: strapi2 }) => ({
+      async createUser(email, lastname, firstname, locale, roles2 = []) {
+        const userService = strapi2.service("admin::user");
+        if (/[A-Z]/.test(email)) {
+          const dbUser = await userService.findOneByEmail(email.toLocaleLowerCase());
+          if (dbUser) {
+            return dbUser;
+          }
+        }
+        const createdUser = await userService.create({
+          firstname: firstname ? firstname : "unset",
+          lastname: lastname ? lastname : "",
+          email: email.toLocaleLowerCase(),
+          roles: roles2,
+          preferedLanguage: locale
+        });
+        return await userService.register({
+          registrationToken: createdUser.registrationToken,
+          userInfo: {
+            firstname: firstname ? firstname : "unset",
+            lastname: lastname ? lastname : "user",
+            password: generator__default.default.generate({
+              length: 43,
+              // 256 bits (https://en.wikipedia.org/wiki/Password_strength#Random_passwords)
+              numbers: true,
+              lowercase: true,
+              uppercase: true,
+              exclude: '()+_-=}{[]|:;"/?.><,`~',
+              strict: true
+            })
+          }
+        });
+      },
+      addGmailAlias(baseEmail, baseAlias) {
+        if (!baseAlias) {
+          return baseEmail;
+        }
+        const alias = baseAlias.replace("/+/g", "");
+        const beforePosition = baseEmail.indexOf("@");
+        const origin = baseEmail.substring(0, beforePosition);
+        const domain = baseEmail.substring(beforePosition);
+        return `${origin}+${alias}${domain}`;
+      },
+      localeFindByHeader(headers) {
+        if (headers["accept-language"] && headers["accept-language"].includes("ja")) {
+          return "ja";
+        } else {
+          return "en";
+        }
+      },
+      async triggerWebHook(user) {
+        let ENTRY_CREATE;
+        const webhookStore = strapi2.serviceMap.get("webhookStore");
+        const eventHub = strapi2.serviceMap.get("eventHub");
+        if (webhookStore) {
+          ENTRY_CREATE = webhookStore.allowedEvents.get("ENTRY_CREATE");
+        }
+        const modelDef = strapi2.getModel("admin::user");
+        const sanitizedEntity = await strapiUtils__default.default.sanitize.sanitizers.defaultSanitizeOutput({
+          schema: modelDef,
+          getModel: (uid2) => strapi2.getModel(uid2)
+        }, user);
+        eventHub.emit(ENTRY_CREATE, {
+          model: modelDef.modelName,
+          entry: sanitizedEntity
+        });
+      },
+      triggerSignInSuccess(user) {
+        delete user["password"];
+        const eventHub = strapi2.serviceMap.get("eventHub");
+        eventHub.emit("admin.auth.success", {
+          user,
+          provider: "strapi-plugin-sso"
+        });
+      },
+      // Sign In Success
+      renderSignUpError(message) {
+        const config2 = strapi2.config.get("plugin::strapi-plugin-sso");
+        return `
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Failed</title>
+  <style>
+    :root {
+      --background: 0 0% 8%;
+      --foreground: 0 0% 100%;
+      --card: 0 0% 3.9%;
+      --card-foreground: 0 0% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+      --secondary: 210 2% 52%;
+      --secondary-foreground: 0 0% 98%;
+      --radius: 0.5rem;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: hsl(var(--background));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: hsl(var(--foreground));
+    }
+
+    .container {
+      text-align: center;
+      background-color: hsl(var(--card));
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 24px;
+      color: hsl(var(--destructive));
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: hsl(var(--card-foreground));
+    }
+
+    a {
+      text-decoration: none;
+      color: hsl(var(--secondary));
+      font-weight: bold;
+      font-size: 16px;
+      padding: 10px 20px;
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border-radius: var(--radius);
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: hsl(var(--card));
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Authentication failed</h3>
+    <p>${message}</p>
+    <a href="${`http://localhost:8080/realms/${config2["OIDC_REALM"]}/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:1337/strapi-plugin-sso/oidc/&client_id=${config2["OIDC_CLIENT_ID"]}`}">
+      Try Another Account
+    </a>
+  </div>
+</body>
+</html>`;
+      }
+    });
+    var role = ({ strapi: strapi2 }) => ({
+      SSO_TYPE_GOOGLE: "1",
+      SSO_TYPE_COGNITO: "2",
+      SSO_TYPE_AZUREAD: "3",
+      SSO_TYPE_OIDC: "4",
+      ssoRoles() {
+        return [
+          {
+            "oauth_type": this.SSO_TYPE_GOOGLE,
+            name: "Google"
+          },
+          {
+            "oauth_type": this.SSO_TYPE_COGNITO,
+            name: "Cognito"
+          },
+          {
+            "oauth_type": this.SSO_TYPE_AZUREAD,
+            name: "AzureAD"
+          },
+          {
+            "oauth_type": this.SSO_TYPE_OIDC,
+            name: "OIDC"
+          }
+        ];
+      },
+      async googleRoles() {
+        return await strapi2.query("plugin::strapi-plugin-sso.roles").findOne({
+          where: {
+            "oauth_type": this.SSO_TYPE_GOOGLE
+          }
+        });
+      },
+      async cognitoRoles() {
+        return await strapi2.query("plugin::strapi-plugin-sso.roles").findOne({
+          where: {
+            "oauth_type": this.SSO_TYPE_COGNITO
+          }
+        });
+      },
+      async azureAdRoles() {
+        return await strapi2.query("plugin::strapi-plugin-sso.roles").findOne({
+          where: {
+            oauth_type: this.SSO_TYPE_AZUREAD
+          }
+        });
+      },
+      async oidcRoles() {
+        return await strapi2.query("plugin::strapi-plugin-sso.roles").findOne({
+          where: {
+            "oauth_type": this.SSO_TYPE_OIDC
+          }
+        });
+      },
+      async find() {
+        return await strapi2.query("plugin::strapi-plugin-sso.roles").findMany();
+      },
+      async update(roles2) {
+        const query = strapi2.query("plugin::strapi-plugin-sso.roles");
+        await Promise.all(
+          roles2.map((role2) => {
+            return query.findOne({ where: { "oauth_type": role2["oauth_type"] } }).then((ssoRole) => {
+              if (ssoRole) {
+                query.update({
+                  where: { "oauth_type": role2["oauth_type"] },
+                  data: { roles: role2.role }
+                });
+              } else {
+                query.create({
+                  data: {
+                    "oauth_type": role2["oauth_type"],
+                    roles: role2.role
+                  }
+                });
+              }
+            });
+          })
+        );
+      }
+    });
+    var services = {
+      oauth,
+      role
+    };
+    var index = {
+      register,
+      bootstrap,
+      destroy,
+      config,
+      controllers,
+      routes,
+      services,
+      contentTypes,
+      policies
+    };
+    module2.exports = index;
+  }
+});
+
+// <stdin>
+require_admin();
+require_server();
