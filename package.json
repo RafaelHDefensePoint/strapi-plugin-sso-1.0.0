@@ -15,7 +15,7 @@
     "verify": "strapi-plugin verify",
     "test": "jest",
     "lint": "eslint",
-    "postinstall": "npm run build"
+    "postinstall": "strapi-plugin build"
   },
   "keywords": [
     "strapi",
