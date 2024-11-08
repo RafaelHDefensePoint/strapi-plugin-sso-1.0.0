@@ -48,6 +48,24 @@ const oidcSignInCallback = async (ctx) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
+    function verifyToken(token) {
+      if (!token) {
+        console.error("No token provided");
+        return null;
+      }
+      const payloadBase64 = token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payloadBase64));
+      const clientName = config['OIDC_CLIENT_ID_FOR_ROLE']
+      const roleToCheck = config['OIDC_CLIENT_ROLE_CHECK']
+      const rolesInPayload = decodedPayload.resource_access?.[clientName]?.roles;
+      if (rolesInPayload && rolesInPayload.includes(roleToCheck)) {
+        console.log("User has the required role");
+        return decodedPayload;
+      } else {
+        console.error("User does not have the required role");
+        return null;
+      }
+}
 
     let userInfoEndpointHeaders = {};
     let userInfoEndpointParameters = `?access_token=${response.data.access_token}`;
@@ -72,34 +90,17 @@ const oidcSignInCallback = async (ctx) => {
     let activateUser;
     let jwtToken;
 
+    const decodedPayload = verifyToken(response.data.access_token);
+    if (!decodedPayload) {
+      return ctx.send(oauthService.renderSignUpError(`Permission not found`))
+    }
+
     if (dbUser) {
-      // Already registered
       activateUser = dbUser;
       jwtToken = await tokenService.createJwtToken(dbUser)
     } 
-    function verifyToken(token) {
-      if (!token) {
-        console.error("No token provided");
-        return null;
-      }
-      const payloadBase64 = token.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64));
-      const clientName = config['OIDC_CLIENT_ID_FOR_ROLE']
-      const roleToCheck = config['OIDC_CLIENT_ROLE_CHECK']
-      const rolesInPayload = decodedPayload.resource_access?.[clientName]?.roles;
-      if (rolesInPayload && rolesInPayload.includes(roleToCheck)) {
-        console.log("User has the required role");
-        return decodedPayload;
-      } else {
-        console.error("User does not have the required role");
-        return null;
-      }
-}
+
     if(!dbUser){
-      const decodedPayload = verifyToken(response.data.access_token);
-      if (!decodedPayload) {
-        return ctx.send(oauthService.renderSignUpError(`Any Permission Found`))
-      }
       const oidcRoles = await roleService.oidcRoles()
       const roles = oidcRoles && oidcRoles['roles'] ? oidcRoles['roles'].map(role => ({
         id: role
