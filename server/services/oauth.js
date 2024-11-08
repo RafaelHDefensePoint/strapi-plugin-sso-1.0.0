@@ -187,7 +187,7 @@ export default ({strapi}) => ({
     <div class="container">
       <h3>Authentication failed</h3>
       <p>${message}</p>
-      <a href="${`http://localhost:8080/realms/${config['OIDC_REALM']}/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:1337/strapi-plugin-sso/oidc/&client_id=${config['OIDC_CLIENT_ID']}`}">
+      <a href="${`${config['OIDC_PUBLIC_HOST']}/realms/${config['OIDC_REALM']}/protocol/openid-connect/logout?post_logout_redirect_uri=${config['STRAPI_PUBLIC_HOST']}/strapi-plugin-sso/oidc/&client_id=${config['OIDC_CLIENT_ID']}`}">
         Try Another Account
       </a>
     </div>

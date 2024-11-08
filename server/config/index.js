@@ -26,6 +26,11 @@ export default {
     OIDC_GRANT_TYPE: 'authorization_code',
     OIDC_FAMILY_NAME_FIELD: 'family_name',
     OIDC_GIVEN_NAME_FIELD: 'given_name',
+    OIDC_PUBLIC_HOST: 'http://localhost:8080',
+    OIDC_REALM: 'test',
+    STRAPI_PUBLIC_HOST: 'http://localhost:1337',
+    OIDC_CLIENT_ID_FOR_ROLE: 'strapi',
+    OIDC_CLIENT_ROLE_CHECK: 'admin',
   },
   validator() {
   },

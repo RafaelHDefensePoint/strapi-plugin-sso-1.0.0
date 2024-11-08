@@ -472,7 +472,12 @@ var require_server = __commonJS({
         OIDC_USER_INFO_ENDPOINT_WITH_AUTH_HEADER: false,
         OIDC_GRANT_TYPE: "authorization_code",
         OIDC_FAMILY_NAME_FIELD: "family_name",
-        OIDC_GIVEN_NAME_FIELD: "given_name"
+        OIDC_GIVEN_NAME_FIELD: "given_name",
+        OIDC_PUBLIC_HOST: "http://localhost:8080",
+        OIDC_REALM: "test",
+        STRAPI_PUBLIC_HOST: "http://localhost:1337",
+        OIDC_CLIENT_ID_FOR_ROLE: "strapi",
+        OIDC_CLIENT_ROLE_CHECK: "admin"
       },
       validator() {
       }
@@ -1192,7 +1197,7 @@ var require_server = __commonJS({
     <div class="container">
       <h3>Authentication failed</h3>
       <p>${message}</p>
-      <a href="${`http://localhost:8080/realms/${config2["OIDC_REALM"]}/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:1337/strapi-plugin-sso/oidc/&client_id=${config2["OIDC_CLIENT_ID"]}`}">
+      <a href="${`${config2["OIDC_PUBLIC_HOST"]}/realms/${config2["OIDC_REALM"]}/protocol/openid-connect/logout?post_logout_redirect_uri=${config2["STRAPI_PUBLIC_HOST"]}/strapi-plugin-sso/oidc/&client_id=${config2["OIDC_CLIENT_ID"]}`}">
         Try Another Account
       </a>
     </div>
