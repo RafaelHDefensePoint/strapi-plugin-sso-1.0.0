@@ -54,13 +54,13 @@ const oidcSignInCallback = async (ctx) => {
         return null;
       }
       const payloadBase64 = token.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64));
+      const decodedToken = JSON.parse(atob(payloadBase64));
       const clientName = config['OIDC_CLIENT_ID_FOR_ROLE']
       const roleToCheck = config['OIDC_CLIENT_ROLE_CHECK']
-      const rolesInPayload = decodedPayload.resource_access?.[clientName]?.roles;
+      const rolesInPayload = decodedToken.resource_access?.[clientName]?.roles;
       if (rolesInPayload && rolesInPayload.includes(roleToCheck)) {
         console.log("User has the required role");
-        return decodedPayload;
+        return decodedToken;
       } else {
         console.error("User does not have the required role");
         return null;
