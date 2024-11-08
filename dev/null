@@ -3,9 +3,9 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
-// dist/_chunks/index-BgtKW0M4.js
-var require_index_BgtKW0M4 = __commonJS({
-  "dist/_chunks/index-BgtKW0M4.js"(exports2) {
+// dist/_chunks/index-DHNjXwCc.js
+var require_index_DHNjXwCc = __commonJS({
+  "dist/_chunks/index-DHNjXwCc.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
     var jsxRuntime = require("react/jsx-runtime");
@@ -15,7 +15,7 @@ var require_index_BgtKW0M4 = __commonJS({
     var designSystem = require("@strapi/design-system");
     var reactIntl = require("react-intl");
     var styled = require("styled-components");
-    var index = require_index_D2m6a_Vu();
+    var index = require_index_CnrKP_dE();
     var _interopDefault = (e) => e && e.__esModule ? e : { default: e };
     var styled__default = /* @__PURE__ */ _interopDefault(styled);
     var getTrad = (id) => `${index.pluginId}.${id}`;
@@ -211,20 +211,27 @@ var require_ja_DDlwRju9 = __commonJS({
   }
 });
 
-// dist/_chunks/index-D2m6a-Vu.js
-var require_index_D2m6a_Vu = __commonJS({
-  "dist/_chunks/index-D2m6a-Vu.js"(exports2) {
+// dist/_chunks/index-CnrKP-dE.js
+var require_index_CnrKP_dE = __commonJS({
+  "dist/_chunks/index-CnrKP-dE.js"(exports2) {
     "use strict";
     var react = require("react");
     var jsxRuntime = require("react/jsx-runtime");
     var icons = require("@strapi/icons");
-    var __variableDynamicImportRuntimeHelper = (glob, path) => {
+    var __variableDynamicImportRuntimeHelper = (glob, path, segs) => {
       const v = glob[path];
       if (v) {
         return typeof v === "function" ? v() : Promise.resolve(v);
       }
       return new Promise((_, reject) => {
-        (typeof queueMicrotask === "function" ? queueMicrotask : setTimeout)(reject.bind(null, new Error("Unknown variable dynamic import: " + path)));
+        (typeof queueMicrotask === "function" ? queueMicrotask : setTimeout)(
+          reject.bind(
+            null,
+            new Error(
+              "Unknown variable dynamic import: " + path + (path.split("/").length !== segs ? ". Note that variables only represent file names one level deep." : "")
+            )
+          )
+        );
       });
     };
     var name$1 = "strapi-plugin-sso";
@@ -364,7 +371,7 @@ var require_index_D2m6a_Vu = __commonJS({
             defaultMessage: name
           },
           Component: async () => {
-            return await Promise.resolve().then(() => require_index_BgtKW0M4());
+            return await Promise.resolve().then(() => require_index_DHNjXwCc());
           },
           permissions: [{ action: "plugin::strapi-plugin-sso.read", subject: null }]
         });
@@ -380,7 +387,7 @@ var require_index_D2m6a_Vu = __commonJS({
       async registerTrads({ locales }) {
         const importedTrads = await Promise.all(
           locales.map((locale) => {
-            return __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/en.json": () => Promise.resolve().then(() => require_en_DtcBvSHe()), "./translations/fr.json": () => Promise.resolve().then(() => require_fr_C8Qw4iPZ()), "./translations/ja.json": () => Promise.resolve().then(() => require_ja_DDlwRju9()) }), `./translations/${locale}.json`).then(({ default: data }) => {
+            return __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/en.json": () => Promise.resolve().then(() => require_en_DtcBvSHe()), "./translations/fr.json": () => Promise.resolve().then(() => require_fr_C8Qw4iPZ()), "./translations/ja.json": () => Promise.resolve().then(() => require_ja_DDlwRju9()) }), `./translations/${locale}.json`, 3).then(({ default: data }) => {
               const newData = Object.fromEntries(
                 Object.entries(data).map(([key, value]) => [getTranslation(key), value])
               );
@@ -408,7 +415,7 @@ var require_index_D2m6a_Vu = __commonJS({
 var require_admin = __commonJS({
   "dist/admin/index.js"(exports2, module2) {
     "use strict";
-    var index = require_index_D2m6a_Vu();
+    var index = require_index_CnrKP_dE();
     module2.exports = index.index;
   }
 });
